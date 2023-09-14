@@ -15,11 +15,17 @@ if ( WebGL.isWebGLAvailable() ) {
     document.body.appendChild( renderer.domElement );
 
     //LIGHTING//
-    const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+    const directionalLight = new THREE.DirectionalLight( 0xffffff, 5 );
+    directionalLight.position.set(0, 1, 0); // Move the light closer to the model
     scene.add( directionalLight );
 
+    const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+    const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Red color
+    const cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    scene.add(cubeMesh);
 
-    camera.position.set( 0, 20, 100 );
+
+    camera.position.set( 0, 0, 30 );
 
     // renderer.setClearColor(0xffffff); // Set a white clear color
 
@@ -35,9 +41,8 @@ if ( WebGL.isWebGLAvailable() ) {
 
         const model = gltf.scene
 
-        model.position.setX(0);
-        model.position.setY(0);
-        model.position.setZ(0);
+        model.scale.set(0.1,0.1,0.1)
+        model.position.set(0,0,0);
 
         scene.add( model );
 
