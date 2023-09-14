@@ -7,54 +7,43 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 if ( WebGL.isWebGLAvailable() ) {
 
+
+    // 1 of 3 things required for all 3js apps,
 	const scene = new THREE.Scene();
+
+    // 2 of 3 things required for all 3js apps,
     const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    document.body.appendChild( renderer.domElement );
-
-    //LIGHTING//
-    const directionalLight = new THREE.DirectionalLight( 0xffffff, 5 );
-    directionalLight.position.set(0, 1, 0); // Move the light closer to the model
-    scene.add( directionalLight );
-
-    const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
-    const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Red color
-    const cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    scene.add(cubeMesh);
 
 
-    camera.position.set( 0, 0, 30 );
+    //Initializations
+    let object;
 
-    // renderer.setClearColor(0xffffff); // Set a white clear color
+    //OrbitControls (Navigation, allowing camera to move)
+    let controls
 
+    loader.load(
+        'public/attempt3.glb', function(gltf) {
+            //If file is loaded, add to scene.
+            object = gltf.scene;
+            scene.add(object);
+        },
+        function(xhr) {
+            //Loading progress logger
+            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+        },
+        function(error){
+            console.error(error)
+        }
+    )
 
-    function animate() {
-        requestAnimationFrame( animate );
-        renderer.render( scene, camera );
-    }
+    //Instantiate a new renderer + set size
+    const renderer = new THREE.WebGLRenderer({ alpha : true}); //Allowing transparent background with Alpha
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
-    const loader = new GLTFLoader();
-
-    loader.load( 'public/attempt3.glb', function ( gltf ) {
-
-        const model = gltf.scene
-
-        model.scale.set(0.1,0.1,0.1)
-        model.position.set(0,0,0);
-
-        scene.add( model );
-
-
-
-    }, undefined, function ( error ) {
-
-        console.error( error );
-
-    } );
-
-	animate();
+    //Add renderer to dom (was definitely forgetting this step earlier)
+    document.getElementById("container").appendChild(renderer.domElement);
+    
 
 } else {
 
