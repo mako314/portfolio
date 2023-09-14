@@ -15,6 +15,18 @@ if ( WebGL.isWebGLAvailable() ) {
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
 
+    const loader = new GLTFLoader();
+
+    loader.load( '/home/mako77/personal_projects/portfolio/public/EMPTY NOTICE BOARD.glb', function ( gltf ) {
+
+        scene.add( gltf.scene );
+
+    }, undefined, function ( error ) {
+
+        console.error( error );
+
+    } );
+
 } else {
 
 	const warning = WebGL.getWebGLErrorMessage();
