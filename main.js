@@ -24,6 +24,15 @@ if ( WebGL.isWebGLAvailable() ) {
     );
 
 
+    const axesHelper = new THREE.AxesHelper(5)
+    scene.add(axesHelper)
+
+    camera.position.z = 5;
+    
+
+    renderer.render(scene, camera)
+
+
 
 
 } else {
