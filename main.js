@@ -22,15 +22,19 @@ if ( WebGL.isWebGLAvailable() ) {
         0.1,
         1000
     );
-
+    
+    const orbit = new OrbitControls(camera, renderer.domElement)
 
     const axesHelper = new THREE.AxesHelper(5)
     scene.add(axesHelper)
-
+    
     // camera.position.z = 5;
     // camera.position.y = 2;
     //                 //x y z
     camera.position.set(0, 2 ,5 );
+    //Changes position of camera. must come after camera.position.set
+    orbit.update
+
 
     const boxGeometry = new THREE.BoxGeometry();
     const boxMaterial = new THREE.MeshBasicMaterial({color : 0x00FF00})
