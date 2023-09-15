@@ -38,11 +38,14 @@ if ( WebGL.isWebGLAvailable() ) {
     orbit.update
 
 
+    //Plan Box
     const boxGeometry = new THREE.BoxGeometry();
     const boxMaterial = new THREE.MeshBasicMaterial({color : 0x00FF00})
     const box = new THREE.Mesh(boxGeometry, boxMaterial)
     scene.add(box)
+    
 
+    //Plane Instance
     const planeGeometry = new THREE.PlaneGeometry(30, 30);
     const planeMaterial = new THREE.MeshBasicMaterial({
         color: 0xFFFFFF,
@@ -55,6 +58,14 @@ if ( WebGL.isWebGLAvailable() ) {
 
     const gridHelper = new THREE.GridHelper(30);
     scene.add(gridHelper)
+
+    //Sphere Instance
+    const sphereGeometry = new THREE.SphereGeometry(4, 10, 10);
+    const sphereMaterial = new THREE.MeshBasicMaterial({
+        color : 0x0000FF,
+        wireframe: true});
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    scene.add(sphere);
 
 
 
