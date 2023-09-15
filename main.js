@@ -22,10 +22,12 @@ if ( WebGL.isWebGLAvailable() ) {
     //OrbitControls (Navigation, allowing camera to move)
     let controls
 
+    const loader = new GLTFLoader()
     loader.load(
         'public/attempt3.glb', function(gltf) {
             //If file is loaded, add to scene.
             object = gltf.scene;
+            
             scene.add(object);
         },
         function(xhr) {
@@ -43,7 +45,35 @@ if ( WebGL.isWebGLAvailable() ) {
 
     //Add renderer to dom (was definitely forgetting this step earlier)
     document.getElementById("container").appendChild(renderer.domElement);
-    
+
+    //Can use a ternary to render the camera position wherever you'd like
+
+
+    //LIGHTING
+    const topLight = new THREE.DirectionalLight(0xffffff, 1) //Color - Intensity
+    topLight.position.set(500,500,500) //Top left
+    topLight.castShadow = true;
+
+    scene.add(topLight)
+
+    const ambientLight = new THREE.AmbientLight(0x333333, 1);
+    scene.add(ambientLight)
+
+    //Render the scene 
+    function animate(){
+        requestAnimationFrame(animate);
+        //Can add code here to update the scene, automatic movement etc
+    }
+
+    window.addEventListener("resize", function(){
+        camera.aspect = window.innerWidth / window.innerHeight
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight)
+    })
+
+    //Start the rendering
+    animate()
+
 
 } else {
 
