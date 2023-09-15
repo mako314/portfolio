@@ -60,14 +60,14 @@ if ( WebGL.isWebGLAvailable() ) {
     scene.add(gridHelper)
 
     //Sphere Instance
-    const sphereGeometry = new THREE.SphereGeometry(4, 10, 10);
-    const sphereMaterial = new THREE.MeshBasicMaterial({
+    const sphereGeometry = new THREE.SphereGeometry(4, 50, 50);
+    const sphereMaterial = new THREE.MeshLambertMaterial({
         color : 0x0000FF,
-        wireframe: true});
+        wireframe: false});
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     scene.add(sphere);
 
-
+    sphere.position.x = -10;
 
     box.rotation.x = 5;
     box.rotation.y = 5;
