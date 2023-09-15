@@ -44,9 +44,19 @@ if ( WebGL.isWebGLAvailable() ) {
     scene.add(box)
 
     const planeGeometry = new THREE.PlaneGeometry(30, 30);
-    const planeMaterial = new THREE.MeshBasicMaterial({color: 0xFFFFFF})
+    const planeMaterial = new THREE.MeshBasicMaterial({
+        color: 0xFFFFFF,
+        side: THREE.DoubleSide
+    });
     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-    scene.add(plane)
+    scene.add(plane);
+    plane.rotation.x = -0.5 * Math.PI;
+
+
+    const gridHelper = new THREE.GridHelper(30);
+    scene.add(gridHelper)
+
+
 
     box.rotation.x = 5;
     box.rotation.y = 5;
