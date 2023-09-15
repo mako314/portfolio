@@ -29,6 +29,7 @@ if ( WebGL.isWebGLAvailable() ) {
             object = gltf.scene;
             
             scene.add(object);
+            renderer.render(scene, camera)
         },
         function(xhr) {
             //Loading progress logger
