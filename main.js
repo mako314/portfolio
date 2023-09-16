@@ -47,7 +47,7 @@ if ( WebGL.isWebGLAvailable() ) {
 
     //Plane Instance
     const planeGeometry = new THREE.PlaneGeometry(30, 30);
-    const planeMaterial = new THREE.MeshBasicMaterial({
+    const planeMaterial = new THREE.MeshStandardMaterial({
         color: 0xFFFFFF,
         side: THREE.DoubleSide
     });
@@ -60,29 +60,49 @@ if ( WebGL.isWebGLAvailable() ) {
 
     //Sphere Instance
     const sphereGeometry = new THREE.SphereGeometry(4, 50, 50);
-    const sphereMaterial = new THREE.MeshBasicMaterial({
+    const sphereMaterial = new THREE.MeshStandardMaterial({
         color : 0x0000FF,
         wireframe: false});
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     scene.add(sphere);
-
     sphere.position.set(-10, 10, 0);
+    
+
+    //LIGHTING - STARTING WITH AMBIENT LIGHTING
+    const ambientLight = new THREE.AmbientLight(0x333333)
+    scene.add(ambientLight);
+
+    //LIGHTING - DIRECTIONAL THIS TIME
+    const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 0.8);
+    scene.add(directionalLight);
+    directionalLight.position.set(-30, 50 ,0);
+    
+    //dLightHelper                                  can change size of second square with this input after directional light
+    const dLightHelper = new THREE.DirectionalLightHelper(directionalLight, 5);
+    scene.add(dLightHelper);
     
     //START GUI, allows for changing the color in a controller based system in top right corner
     const gui = new dat.GUI();
 
     const options = {
         sphereColor: '#ffea00',
-        wireframe: false
+        wireframe: false,
+        speed: 0.01
     };
     //Call options, then key inside as a STRING. This one changes the color
     gui.addColor(options, 'sphereColor').onChange(function(e){
         sphere.material.color.set(e)
     });
-
+    //Call options, key inside (wireframe) as a STRING. This one is a toggle for wireframing
     gui.add(options, 'wireframe').onChange(function(e){
         sphere.material.wireframe = e;
     });
+    //Call options, key inside (speed) as a STRING, the 1st value, 0 is the minimum, while 0.1 is the maximum.
+    gui.add(options, 'speed', 0, 0.1)
+
+    let step = 0;
+    // let speed = 0.01; MOVED TO GUI
+
 
 
 
@@ -94,6 +114,11 @@ if ( WebGL.isWebGLAvailable() ) {
     function animate(){
         box.rotation.x += 0.01;
         box.rotation.y += 0.01;
+
+
+        step += options.speed;
+        sphere.position.y = 10 * Math.abs(Math.sin(step));
+
         renderer.render(scene, camera)
     }
 
