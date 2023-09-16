@@ -47,7 +47,7 @@ if ( WebGL.isWebGLAvailable() ) {
 
     //Plane Instance
     const planeGeometry = new THREE.PlaneGeometry(30, 30);
-    const planeMaterial = new THREE.MeshBasicMaterial({
+    const planeMaterial = new THREE.MeshStandardMaterial({
         color: 0xFFFFFF,
         side: THREE.DoubleSide
     });
@@ -60,13 +60,26 @@ if ( WebGL.isWebGLAvailable() ) {
 
     //Sphere Instance
     const sphereGeometry = new THREE.SphereGeometry(4, 50, 50);
-    const sphereMaterial = new THREE.MeshBasicMaterial({
+    const sphereMaterial = new THREE.MeshStandardMaterial({
         color : 0x0000FF,
         wireframe: false});
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     scene.add(sphere);
-
     sphere.position.set(-10, 10, 0);
+    
+
+    //LIGHTING - STARTING WITH AMBIENT LIGHTING
+    const ambientLight = new THREE.AmbientLight(0x333333)
+    scene.add(ambientLight);
+
+    //LIGHTING - DIRECTIONAL THIS TIME
+    const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 0.8);
+    scene.add(directionalLight);
+    directionalLight.position.set(-30, 50 ,0);
+    
+    //dLightHelper                                  can change size of second square with this input after directional light
+    const dLightHelper = new THREE.DirectionalLightHelper(directionalLight, 5);
+    scene.add(dLightHelper);
     
     //START GUI, allows for changing the color in a controller based system in top right corner
     const gui = new dat.GUI();
