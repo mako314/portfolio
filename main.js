@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-
+import * as dat from 'dat.gui';
 
 
 if ( WebGL.isWebGLAvailable() ) {
@@ -54,24 +54,36 @@ if ( WebGL.isWebGLAvailable() ) {
     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
     scene.add(plane);
     plane.rotation.x = -0.5 * Math.PI;
-
-
+    //Adds a grid, rotated plane to help
     const gridHelper = new THREE.GridHelper(30);
     scene.add(gridHelper)
 
     //Sphere Instance
     const sphereGeometry = new THREE.SphereGeometry(4, 50, 50);
-    const sphereMaterial = new THREE.MeshLambertMaterial({
+    const sphereMaterial = new THREE.MeshBasicMaterial({
         color : 0x0000FF,
         wireframe: false});
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     scene.add(sphere);
 
-    sphere.position.x = -10;
+    sphere.position.set(-10, 10, 0);
+    
+    //START GUI, allows for changing the color in a controller based system in top right corner
+    const gui = new dat.GUI();
 
-    box.rotation.x = 5;
-    box.rotation.y = 5;
+    const options = {
+        sphereColor: '#ffea00'
+    };
+    //Call options, then key inside as a STRING
+    gui.addColor(options, 'sphereColor').onChange(function(e){
+        sphere.material.color.set(e)
+    })
 
+    // box.rotation.x = 5;
+    // box.rotation.y = 5;
+    
+
+    //Animate boxrotation
     function animate(){
         box.rotation.x += 0.01;
         box.rotation.y += 0.01;
