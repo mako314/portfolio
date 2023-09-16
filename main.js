@@ -72,12 +72,19 @@ if ( WebGL.isWebGLAvailable() ) {
     const gui = new dat.GUI();
 
     const options = {
-        sphereColor: '#ffea00'
+        sphereColor: '#ffea00',
+        wireframe: false
     };
-    //Call options, then key inside as a STRING
+    //Call options, then key inside as a STRING. This one changes the color
     gui.addColor(options, 'sphereColor').onChange(function(e){
         sphere.material.color.set(e)
-    })
+    });
+
+    gui.add(options, 'wireframe').onChange(function(e){
+        sphere.material.wireframe = e;
+    });
+
+
 
     // box.rotation.x = 5;
     // box.rotation.y = 5;
