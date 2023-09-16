@@ -73,16 +73,23 @@ if ( WebGL.isWebGLAvailable() ) {
 
     const options = {
         sphereColor: '#ffea00',
-        wireframe: false
+        wireframe: false,
+        speed: 0.01
     };
     //Call options, then key inside as a STRING. This one changes the color
     gui.addColor(options, 'sphereColor').onChange(function(e){
         sphere.material.color.set(e)
     });
-
+    //Call options, key inside (wireframe) as a STRING. This one is a toggle for wireframing
     gui.add(options, 'wireframe').onChange(function(e){
         sphere.material.wireframe = e;
     });
+    //Call options, key inside (speed) as a STRING, the 1st value, 0 is the minimum, while 0.1 is the maximum.
+    gui.add(options, 'speed', 0, 0.1)
+
+    let step = 0;
+    // let speed = 0.01; MOVED TO GUI
+
 
 
 
@@ -94,6 +101,11 @@ if ( WebGL.isWebGLAvailable() ) {
     function animate(){
         box.rotation.x += 0.01;
         box.rotation.y += 0.01;
+
+
+        step += options.speed;
+        sphere.position.y = 10 * Math.abs(Math.sin(step));
+
         renderer.render(scene, camera)
     }
 
