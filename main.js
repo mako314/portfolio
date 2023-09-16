@@ -2,78 +2,104 @@ import * as THREE from 'three';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-
+import * as dat from 'dat.gui';
 
 
 if ( WebGL.isWebGLAvailable() ) {
 
+    const renderer = new THREE.WebGL1Renderer();
 
-    // 1 of 3 things required for all 3js apps,
-	const scene = new THREE.Scene();
-
-    // 2 of 3 things required for all 3js apps,
-    const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-
-
-
-    //Initializations
-    let object;
-
-    //OrbitControls (Navigation, allowing camera to move)
-    let controls
-
-    const loader = new GLTFLoader()
-    loader.load(
-        'public/attempt3.glb', function(gltf) {
-            //If file is loaded, add to scene.
-            object = gltf.scene;
-            
-            scene.add(object);
-            renderer.render(scene, camera)
-        },
-        function(xhr) {
-            //Loading progress logger
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-        },
-        function(error){
-            console.error(error)
-        }
-    )
-
-    //Instantiate a new renderer + set size
-    const renderer = new THREE.WebGLRenderer({ alpha : true}); //Allowing transparent background with Alpha
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    //Add renderer to dom (was definitely forgetting this step earlier)
-    document.getElementById("container").appendChild(renderer.domElement);
-
-    //Can use a ternary to render the camera position wherever you'd like
+    document.body.appendChild(renderer.domElement)
 
 
-    //LIGHTING
-    const topLight = new THREE.DirectionalLight(0xffffff, 1) //Color - Intensity
-    topLight.position.set(500,500,500) //Top left
-    topLight.castShadow = true;
+    const scene = new THREE.Scene();
 
-    scene.add(topLight)
+    const camera = new THREE.PerspectiveCamera(
+        45,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+    );
+    
+    const orbit = new OrbitControls(camera, renderer.domElement)
 
-    const ambientLight = new THREE.AmbientLight(0x333333, 1);
-    scene.add(ambientLight)
+    const axesHelper = new THREE.AxesHelper(5)
+    scene.add(axesHelper)
+    
+    // camera.position.z = 5;
+    // camera.position.y = 2;
 
-    //Render the scene 
+    //                 //x y z
+    camera.position.set(-10, 30 ,30 );
+
+    //Changes position of camera. must come after camera.position.set
+    orbit.update
+
+
+    //Plan Box
+    const boxGeometry = new THREE.BoxGeometry();
+    const boxMaterial = new THREE.MeshBasicMaterial({color : 0x00FF00})
+    const box = new THREE.Mesh(boxGeometry, boxMaterial)
+    scene.add(box)
+    
+
+    //Plane Instance
+    const planeGeometry = new THREE.PlaneGeometry(30, 30);
+    const planeMaterial = new THREE.MeshBasicMaterial({
+        color: 0xFFFFFF,
+        side: THREE.DoubleSide
+    });
+    const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+    scene.add(plane);
+    plane.rotation.x = -0.5 * Math.PI;
+    //Adds a grid, rotated plane to help
+    const gridHelper = new THREE.GridHelper(30);
+    scene.add(gridHelper)
+
+    //Sphere Instance
+    const sphereGeometry = new THREE.SphereGeometry(4, 50, 50);
+    const sphereMaterial = new THREE.MeshBasicMaterial({
+        color : 0x0000FF,
+        wireframe: false});
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    scene.add(sphere);
+
+    sphere.position.set(-10, 10, 0);
+    
+    //START GUI, allows for changing the color in a controller based system in top right corner
+    const gui = new dat.GUI();
+
+    const options = {
+        sphereColor: '#ffea00',
+        wireframe: false
+    };
+    //Call options, then key inside as a STRING. This one changes the color
+    gui.addColor(options, 'sphereColor').onChange(function(e){
+        sphere.material.color.set(e)
+    });
+
+    gui.add(options, 'wireframe').onChange(function(e){
+        sphere.material.wireframe = e;
+    });
+
+
+
+    // box.rotation.x = 5;
+    // box.rotation.y = 5;
+    
+
+    //Animate boxrotation
     function animate(){
-        requestAnimationFrame(animate);
-        //Can add code here to update the scene, automatic movement etc
+        box.rotation.x += 0.01;
+        box.rotation.y += 0.01;
+        renderer.render(scene, camera)
     }
 
-    window.addEventListener("resize", function(){
-        camera.aspect = window.innerWidth / window.innerHeight
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight)
-    })
+    renderer.setAnimationLoop(animate)
 
-    //Start the rendering
-    animate()
+
 
 
 } else {
