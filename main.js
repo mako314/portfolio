@@ -8,6 +8,8 @@ import * as dat from 'dat.gui';
 if ( WebGL.isWebGLAvailable() ) {
 
     const renderer = new THREE.WebGL1Renderer();
+    //Calls shadow, basically enabling shadows throughout the application
+    renderer.shadowMap.enabled = true;
 
     renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -54,6 +56,8 @@ if ( WebGL.isWebGLAvailable() ) {
     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
     scene.add(plane);
     plane.rotation.x = -0.5 * Math.PI;
+    plane.receiveShadow = true;
+
     //Adds a grid, rotated plane to help
     const gridHelper = new THREE.GridHelper(30);
     scene.add(gridHelper)
@@ -66,6 +70,7 @@ if ( WebGL.isWebGLAvailable() ) {
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     scene.add(sphere);
     sphere.position.set(-10, 10, 0);
+    sphere.castShadow = true;
     
 
     //LIGHTING - STARTING WITH AMBIENT LIGHTING
@@ -76,6 +81,7 @@ if ( WebGL.isWebGLAvailable() ) {
     const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 0.8);
     scene.add(directionalLight);
     directionalLight.position.set(-30, 50 ,0);
+    directionalLight.castShadow = true;
     
     //dLightHelper                                  can change size of second square with this input after directional light
     const dLightHelper = new THREE.DirectionalLightHelper(directionalLight, 5);
