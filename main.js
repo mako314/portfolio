@@ -165,7 +165,7 @@ if ( WebGL.isWebGLAvailable() ) {
     //Background coloring,
     renderer.setClearColor(0xFFFFFF)
     //Add texture to background
-    // const textureLoader = new THREE.TextureLoader();
+    const textureLoader = new THREE.TextureLoader();
     // scene.background = textureLoader.load(stars)
 
     //Making the scene a cube
@@ -178,6 +178,17 @@ if ( WebGL.isWebGLAvailable() ) {
         stars,
         stars
     ])
+
+    const box2Geometry = new THREE.BoxGeometry(4, 4, 4);
+    const box2Material = new THREE.MeshBasicMaterial({
+        color:0x00FF00,
+        map: textureLoader.load(nebula)
+    });
+    const box2 = new THREE.Mesh(box2Geometry, box2Material);
+    scene.add(box2)
+    box2.position.set(0, 15, 10);
+
+
 
 
 
