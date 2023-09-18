@@ -4,6 +4,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as dat from 'dat.gui';
 
+import nebula from './src/nebula.jpg'
+import stars from './src/stars.jpg'
 
 if ( WebGL.isWebGLAvailable() ) {
 
@@ -159,7 +161,11 @@ if ( WebGL.isWebGLAvailable() ) {
     scene.fog = new THREE.FogExp2()
 
 
-    renderer.setClearColor(0xFFEA00)
+    renderer.setClearColor(0xcfccb9)
+
+    const textureLoader = new THREE.TextureLoader();
+    scene.background = textureLoader.load(stars)
+
 
 
     //Animate boxrotation and other things with the spotLight
