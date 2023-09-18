@@ -87,6 +87,11 @@ if ( WebGL.isWebGLAvailable() ) {
     const dLightHelper = new THREE.DirectionalLightHelper(directionalLight, 5);
     scene.add(dLightHelper);
     
+    //Help shadows out, otherwise you get cut off shadows on plane
+    //Makes 4 lines pointed towards the plane, indiciating where exactly shadows can occur.
+    const dLightShadowHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
+    scene.add(dLightShadowHelper)
+    
     //START GUI, allows for changing the color in a controller based system in top right corner
     const gui = new dat.GUI();
 
