@@ -179,14 +179,28 @@ if ( WebGL.isWebGLAvailable() ) {
         stars
     ])
 
+    //Add texture to an object, here it is a simple box
     const box2Geometry = new THREE.BoxGeometry(4, 4, 4);
     const box2Material = new THREE.MeshBasicMaterial({
-        color:0x00FF00,
-        map: textureLoader.load(nebula)
+        //color:0x00FF00,
+        //map: textureLoader.load(nebula)
     });
-    const box2 = new THREE.Mesh(box2Geometry, box2Material);
+    const box2MultiMaterial = [
+        new THREE.MeshBasicMaterial({map: textureLoader.load(stars)}),
+        new THREE.MeshBasicMaterial({map: textureLoader.load(stars)}),
+        new THREE.MeshBasicMaterial({map: textureLoader.load(stars)}),
+        new THREE.MeshBasicMaterial({map: textureLoader.load(nebula)}),
+        new THREE.MeshBasicMaterial({map: textureLoader.load(stars)}),
+        new THREE.MeshBasicMaterial({map: textureLoader.load(nebula)}),
+        new THREE.MeshBasicMaterial({map: textureLoader.load(stars)}),
+
+    ];
+    const box2 = new THREE.Mesh(box2Geometry, box2MultiMaterial);
     scene.add(box2)
     box2.position.set(0, 15, 10);
+
+    //Other way to add texture to the box2 
+    box2.material.map = textureLoader.load(nebula);
 
 
 
