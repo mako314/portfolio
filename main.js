@@ -159,6 +159,8 @@ if ( WebGL.isWebGLAvailable() ) {
     scene.fog = new THREE.FogExp2()
 
 
+    renderer.setClearColor(0xFFEA00)
+
 
     //Animate boxrotation and other things with the spotLight
     function animate(){
