@@ -76,25 +76,33 @@ if ( WebGL.isWebGLAvailable() ) {
     //LIGHTING - STARTING WITH AMBIENT LIGHTING
     const ambientLight = new THREE.AmbientLight(0x333333)
     scene.add(ambientLight);
-
-    //LIGHTING - DIRECTIONAL THIS TIME
-    const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 0.8);
-    scene.add(directionalLight);
-    directionalLight.position.set(-30, 50 ,0);
-    //Have the directional list cast a shadow
-    directionalLight.castShadow = true;
-    //Position the bottom portion lower to properly capture balls shadow
-    directionalLight.shadow.camera.bottom = -12;
-
-
-    //dLightHelper                                  can change size of second square with this input after directional light
-    const dLightHelper = new THREE.DirectionalLightHelper(directionalLight, 5);
-    scene.add(dLightHelper);
     
-    //Help shadows out, otherwise you get cut off shadows on plane
-    //Makes 4 lines pointed towards the plane, indiciating where exactly shadows can occur.
-    const dLightShadowHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
-    scene.add(dLightShadowHelper)
+
+    //----------------------Directional Lighting, be cautious to the double commented (actual comments throughout the code, moving onto spotlight)------------
+    // //LIGHTING - DIRECTIONAL THIS TIME
+    // const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 0.8);
+    // scene.add(directionalLight);
+    // directionalLight.position.set(-30, 50 ,0);
+    // //Have the directional list cast a shadow
+    // directionalLight.castShadow = true;
+    // //Position the bottom portion lower to properly capture balls shadow
+    // directionalLight.shadow.camera.bottom = -12;
+
+
+    // //dLightHelper                                  can change size of second square with this input after directional light
+    // const dLightHelper = new THREE.DirectionalLightHelper(directionalLight, 5);
+    // scene.add(dLightHelper);
+    
+    // //Help shadows out, otherwise you get cut off shadows on plane
+    // //Makes 4 lines pointed towards the plane, indiciating where exactly shadows can occur.
+    // const dLightShadowHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
+    // scene.add(dLightShadowHelper)
+
+    //-----------------------------------------Directional light ABOVE----------------------------------
+    
+    //Adding spotlight 
+    const spotLight = new THREE.SpotLight(0xFFFFFF);
+    scene.add(spotLight)
     
     //START GUI, allows for changing the color in a controller based system in top right corner
     const gui = new dat.GUI();
