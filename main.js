@@ -81,8 +81,12 @@ if ( WebGL.isWebGLAvailable() ) {
     const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 0.8);
     scene.add(directionalLight);
     directionalLight.position.set(-30, 50 ,0);
+    //Have the directional list cast a shadow
     directionalLight.castShadow = true;
-    
+    //Position the bottom portion lower to properly capture balls shadow
+    directionalLight.shadow.camera.bottom = -12;
+
+
     //dLightHelper                                  can change size of second square with this input after directional light
     const dLightHelper = new THREE.DirectionalLightHelper(directionalLight, 5);
     scene.add(dLightHelper);
