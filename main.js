@@ -122,29 +122,36 @@ if ( WebGL.isWebGLAvailable() ) {
     const options = {
         sphereColor: '#ffea00',
         wireframe: false,
-        speed: 0.01
+        speed: 0.01,
+        angle: 0.2,
+        penumbra: 0,
+        intensity: 1,
     };
+
     //Call options, then key inside as a STRING. This one changes the color
     gui.addColor(options, 'sphereColor').onChange(function(e){
         sphere.material.color.set(e)
     });
+
     //Call options, key inside (wireframe) as a STRING. This one is a toggle for wireframing
     gui.add(options, 'wireframe').onChange(function(e){
         sphere.material.wireframe = e;
     });
+
     //Call options, key inside (speed) as a STRING, the 1st value, 0 is the minimum, while 0.1 is the maximum.
     gui.add(options, 'speed', 0, 0.1)
 
     let step = 0;
-    // let speed = 0.01; MOVED TO GUI
+    // let speed = 0.01; 
+    // MOVED TO GUI^^^
 
-
+    gui.add(options, 'angle', 0, 0.1)
+    gui.add(options, 'penumbra', 0, 1)
+    gui.add(options, 'intensity', 0, 1)
 
 
     // box.rotation.x = 5;
     // box.rotation.y = 5;
-    
-
     //Animate boxrotation
     function animate(){
         box.rotation.x += 0.01;
@@ -154,6 +161,12 @@ if ( WebGL.isWebGLAvailable() ) {
         step += options.speed;
         sphere.position.y = 10 * Math.abs(Math.sin(step));
 
+        spotLight.angle = options.angle;
+        spotLight.penumbra = options.penumbra
+        spotLight.intensity = options.intensity
+        //Every time you change the values of the lights properties you must call the update on the helper.
+        sLightHelper.update()
+        
         renderer.render(scene, camera)
     }
 
