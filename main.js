@@ -208,9 +208,20 @@ if ( WebGL.isWebGLAvailable() ) {
     });
 
     const rayCaster = new THREE.Raycaster();
-
+    //------------------------------------------------------------------------
+    //Find sphere ID
     const sphereId = sphere.id;
+    //Give box2 a name!
     box2.name = 'theBox';
+
+    const plane2Geometry = new THREE.PlaneGeometry(10, 10, 10, 10);
+    const plane2Material = new THREE.MeshBasicMaterial({
+        color: 0xFFFFFF,
+        wireframe: true
+    });
+    const plane2 = new THREE.Mesh(plane2Geometry, plane2Material);
+    scene.add(plane2)
+    plane2.position.set(10, 10, 15);
 
 
     //Animate boxrotation and other things with the spotLight
@@ -234,7 +245,8 @@ if ( WebGL.isWebGLAvailable() ) {
         for(let i = 0; i < intersects.length; i++){
             if(intersects[i].object.id === sphereId)
                 intersects[i].object.material.color.set(0xFF0000);
-
+                
+                //Give theBox named object a rotation
             if(intersects[i].object.name === 'theBox'){
                 intersects[i].object.rotation.x += 0.01;
                 intersects[i].object.rotation.y += 0.01;
