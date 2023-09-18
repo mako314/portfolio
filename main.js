@@ -103,7 +103,13 @@ if ( WebGL.isWebGLAvailable() ) {
     //Adding spotlight 
     const spotLight = new THREE.SpotLight(0xFFFFFF);
     scene.add(spotLight)
-    
+    //The case seems to be you typically add it to the scene before doing any rotating / positioning
+    spotLight.position.set(-100, 100, 0);
+
+    const sLightHelper = new THREE.SpotLightHelper(spotLight);
+    scene.add(sLightHelper);
+
+
     //START GUI, allows for changing the color in a controller based system in top right corner
     const gui = new dat.GUI();
 
