@@ -142,15 +142,13 @@ if ( WebGL.isWebGLAvailable() ) {
 
     //Call options, key inside (speed) as a STRING, the 1st value, 0 is the minimum, while 0.1 is the maximum.
     gui.add(options, 'speed', 0, 0.1)
-
-    let step = 0;
-    // let speed = 0.01; 
-    // MOVED TO GUI^^^
-
     gui.add(options, 'angle', 0, 0.1)
     gui.add(options, 'penumbra', 0, 1)
     gui.add(options, 'intensity', 0, 1)
 
+    let step = 0;
+    // let speed = 0.01; 
+    // MOVED TO GUI^^^
 
     // box.rotation.x = 5;
     // box.rotation.y = 5;
@@ -159,8 +157,6 @@ if ( WebGL.isWebGLAvailable() ) {
     scene.fog = new THREE.Fog(0xFFFFFF, 0, 200)
     //This fogExp2 class takes 2 arguments, the color and the density. With this method the density of the fog grows exponentially with the distance of the camera
     scene.fog = new THREE.FogExp2()
-
-
 
     //Background coloring,
     renderer.setClearColor(0xFFFFFF)
@@ -200,12 +196,20 @@ if ( WebGL.isWebGLAvailable() ) {
     box2.position.set(0, 15, 10);
 
     //Other way to add texture to the box2 
-    box2.material.map = textureLoader.load(nebula);
+    // box2.material.map = textureLoader.load(nebula);
 
 
+    //Selecting objects from the scene
+    const mousePosition = new THREE.Vector2();
 
+    window.addEventListener('mousemove', function(e) {
+        mousePosition.x = (e.clientX/ this.window.innerWidth) * 2 - 1;
+        mousePosition.y = -(e.clientY / this.window.innerHeight) * 2 + 1;
+    });
 
+    const rayCaster = new THREE.Raycaster();
 
+    const sphereId = sphere.id;
 
     //Animate boxrotation and other things with the spotLight
     function animate(){
@@ -221,6 +225,14 @@ if ( WebGL.isWebGLAvailable() ) {
         spotLight.intensity = options.intensity
         //Every time you change the values of the lights properties you must call the update on the helper.
         sLightHelper.update()
+
+        rayCaster.setFromCamera(mousePosition, camera);
+        const intersects = rayCaster.intersectObjects(scene.children)
+        console.log(intersects)
+        for(let i = 0; i < intersects.length; i++){
+            if(intersects[i].object.id === sphereId)
+                intersects[i].object.material.color.set(0xFF0000);
+        }
         
         renderer.render(scene, camera)
     }
