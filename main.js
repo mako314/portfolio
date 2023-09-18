@@ -152,7 +152,15 @@ if ( WebGL.isWebGLAvailable() ) {
 
     // box.rotation.x = 5;
     // box.rotation.y = 5;
-    //Animate boxrotation
+
+    //How to create fog; first argument color, 2 others are the near and far limits of where the fog should be visible. So the further we get from 0 we get going backwards the denser the fog gets.  
+    scene.fog = new THREE.Fog(0xFFFFFF, 0, 200)
+    //This fogExp2 class takes 2 arguments, the color and the density. With this method the density of the fog grows exponentially with the distance of the camera
+    scene.fog = new THREE.FogExp2()
+
+
+
+    //Animate boxrotation and other things with the spotLight
     function animate(){
         box.rotation.x += 0.01;
         box.rotation.y += 0.01;
