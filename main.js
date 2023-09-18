@@ -210,6 +210,8 @@ if ( WebGL.isWebGLAvailable() ) {
     const rayCaster = new THREE.Raycaster();
 
     const sphereId = sphere.id;
+    box2.name = 'theBox';
+
 
     //Animate boxrotation and other things with the spotLight
     function animate(){
@@ -232,6 +234,11 @@ if ( WebGL.isWebGLAvailable() ) {
         for(let i = 0; i < intersects.length; i++){
             if(intersects[i].object.id === sphereId)
                 intersects[i].object.material.color.set(0xFF0000);
+
+            if(intersects[i].object.name === 'theBox'){
+                intersects[i].object.rotation.x += 0.01;
+                intersects[i].object.rotation.y += 0.01;
+            }
         }
         
         renderer.render(scene, camera)
