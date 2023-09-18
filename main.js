@@ -99,17 +99,23 @@ if ( WebGL.isWebGLAvailable() ) {
     // scene.add(dLightShadowHelper)
 
     //-----------------------------------------Directional light ABOVE----------------------------------
-    
+
+    //----------------------Spotlight Lighting, be cautious to the double commented (actual comments throughout the code, moving onto spotlight)------------
     //Adding spotlight 
     const spotLight = new THREE.SpotLight(0xFFFFFF);
     scene.add(spotLight)
     //The case seems to be you typically add it to the scene before doing any rotating / positioning
     spotLight.position.set(-100, 100, 0);
+    //Cast shadow for spotlight
+    spotLight.castShadow = true;
+
+    //if the four segments that define the spots created by the light, if the angle is too wide, the shadows will get pixelated, hence we narrow the angle
+    spotLight.angle = 0.2;
 
     const sLightHelper = new THREE.SpotLightHelper(spotLight);
     scene.add(sLightHelper);
 
-
+    //------------------------------------------Spotlight ABOVE-------------
     //START GUI, allows for changing the color in a controller based system in top right corner
     const gui = new dat.GUI();
 
