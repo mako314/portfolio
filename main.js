@@ -161,10 +161,24 @@ if ( WebGL.isWebGLAvailable() ) {
     scene.fog = new THREE.FogExp2()
 
 
-    renderer.setClearColor(0xcfccb9)
 
-    const textureLoader = new THREE.TextureLoader();
-    scene.background = textureLoader.load(stars)
+    //Background coloring,
+    renderer.setClearColor(0xFFFFFF)
+    //Add texture to background
+    // const textureLoader = new THREE.TextureLoader();
+    // scene.background = textureLoader.load(stars)
+
+    //Making the scene a cube
+    const cubeTextureLoader = new THREE.CubeTextureLoader()
+    scene.background = cubeTextureLoader.load([
+        nebula,
+        nebula,
+        stars,
+        stars,
+        stars,
+        stars
+    ])
+
 
 
 
