@@ -4,6 +4,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as dat from 'dat.gui';
 
+import nebula from './src/nebula.jpg'
+import stars from './src/stars.jpg'
 
 if ( WebGL.isWebGLAvailable() ) {
 
@@ -140,15 +142,13 @@ if ( WebGL.isWebGLAvailable() ) {
 
     //Call options, key inside (speed) as a STRING, the 1st value, 0 is the minimum, while 0.1 is the maximum.
     gui.add(options, 'speed', 0, 0.1)
-
-    let step = 0;
-    // let speed = 0.01; 
-    // MOVED TO GUI^^^
-
     gui.add(options, 'angle', 0, 0.1)
     gui.add(options, 'penumbra', 0, 1)
     gui.add(options, 'intensity', 0, 1)
 
+    let step = 0;
+    // let speed = 0.01; 
+    // MOVED TO GUI^^^
 
     // box.rotation.x = 5;
     // box.rotation.y = 5;
@@ -158,10 +158,115 @@ if ( WebGL.isWebGLAvailable() ) {
     //This fogExp2 class takes 2 arguments, the color and the density. With this method the density of the fog grows exponentially with the distance of the camera
     scene.fog = new THREE.FogExp2()
 
+    //Background coloring,
+    renderer.setClearColor(0xFFFFFF)
+    //Add texture to background
+    const textureLoader = new THREE.TextureLoader();
+    // scene.background = textureLoader.load(stars)
 
-    renderer.setClearColor(0xFFEA00)
+    //Making the scene a cube
+    const cubeTextureLoader = new THREE.CubeTextureLoader()
+    scene.background = cubeTextureLoader.load([
+        nebula,
+        nebula,
+        stars,
+        stars,
+        stars,
+        stars
+    ])
+
+    //Add texture to an object, here it is a simple box
+    const box2Geometry = new THREE.BoxGeometry(4, 4, 4);
+    const box2Material = new THREE.MeshBasicMaterial({
+        //color:0x00FF00,
+        //map: textureLoader.load(nebula)
+    });
+    const box2MultiMaterial = [
+        new THREE.MeshBasicMaterial({map: textureLoader.load(stars)}),
+        new THREE.MeshBasicMaterial({map: textureLoader.load(stars)}),
+        new THREE.MeshBasicMaterial({map: textureLoader.load(stars)}),
+        new THREE.MeshBasicMaterial({map: textureLoader.load(nebula)}),
+        new THREE.MeshBasicMaterial({map: textureLoader.load(stars)}),
+        new THREE.MeshBasicMaterial({map: textureLoader.load(nebula)}),
+        new THREE.MeshBasicMaterial({map: textureLoader.load(stars)}),
+
+    ];
+    const box2 = new THREE.Mesh(box2Geometry, box2MultiMaterial);
+    scene.add(box2)
+    box2.position.set(0, 15, 10);
+
+    //Other way to add texture to the box2 
+    // box2.material.map = textureLoader.load(nebula);
 
 
+    //Selecting objects from the scene
+    const mousePosition = new THREE.Vector2();
+
+    window.addEventListener('mousemove', function(e) {
+        mousePosition.x = (e.clientX/ this.window.innerWidth) * 2 - 1;
+        mousePosition.y = -(e.clientY / this.window.innerHeight) * 2 + 1;
+    });
+
+    const rayCaster = new THREE.Raycaster();
+    //------------------------------------------------------------------------
+    //Find sphere ID
+    const sphereId = sphere.id;
+    //Give box2 a name!
+    box2.name = 'theBox';
+
+    //Adding a second plane for manipulation-----------------------------------------------
+    const plane2Geometry = new THREE.PlaneGeometry(10, 10, 10, 10);
+    const plane2Material = new THREE.MeshBasicMaterial({
+        color: 0xFFFFFF,
+        wireframe: true
+    });
+    const plane2 = new THREE.Mesh(plane2Geometry, plane2Material);
+    scene.add(plane2)
+    plane2.position.set(10, 10, 15);
+
+    //All points that form the geometry of a mesh are located in an array in the geometry.attributes property. 
+    //Each set of 3 values starting from the first element of the array represents the xyz value of a vertex (point) 
+    //So you can have:
+    //xyz|xyz|...|xyz
+    //The first xyz is vertex 1, second vertex 2, and then the last one is whatever the last vertex is, depending on the model or geometry of your shape
+    // Going to move this content into animation
+    
+    // plane2.geometry.attributes.position.array[0] -= 10 * Math.random();
+    // plane2.geometry.attributes.position.array[1] -= 10 * Math.random();
+    // plane2.geometry.attributes.position.array[2] -= 10 * Math.random();
+    
+    const lastPointZ = plane2.geometry.attributes.position.array.length - 1;
+    // plane2.geometry.attributes.position.array[lastPointZ] -= 10 * Math.random();
+    //----------------------------------------------------------------------------------------------
+    
+    
+    //-----------------Adding sphere with vertex shader and fragment shaders-----------------------------------------------------------------------
+
+    const sphere2Geometry = new THREE.SphereGeometry(4);
+
+    //We're adding the bottom commented out stuff to our index.html as scripts, and not within our main.js
+    // const vShader = `
+    //     void main() {
+    //         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    // }
+    // `;
+
+    // const fShader = `
+    //     void main() {
+    //         gl_FragColor = vec4(0.5, 0.5, 1.0, 1.0);
+    //     }  
+    // `;
+
+    const sphere2Material = new THREE.ShaderMaterial({
+        vertexShader: document.getElementById('vertexShader').textContent,
+        fragmentShader: document.getElementById('fragmentShader').textContent
+    });
+
+    const sphere2 = new THREE.Mesh(sphere2Geometry, sphere2Material);
+    scene.add(sphere2);
+    sphere2.position.set(-5, 10, 10);
+
+    //----------------------------------------------------------------------------------------------
     //Animate boxrotation and other things with the spotLight
     function animate(){
         box.rotation.x += 0.01;
@@ -176,7 +281,29 @@ if ( WebGL.isWebGLAvailable() ) {
         spotLight.intensity = options.intensity
         //Every time you change the values of the lights properties you must call the update on the helper.
         sLightHelper.update()
+
+        rayCaster.setFromCamera(mousePosition, camera);
+        const intersects = rayCaster.intersectObjects(scene.children)
+        console.log(intersects)
+        for(let i = 0; i < intersects.length; i++){
+            if(intersects[i].object.id === sphereId)
+                intersects[i].object.material.color.set(0xFF0000);
+                
+                //Give theBox named object a rotation
+            if(intersects[i].object.name === 'theBox'){
+                intersects[i].object.rotation.x += 0.01;
+                intersects[i].object.rotation.y += 0.01;
+            }
+        }
+
+        plane2.geometry.attributes.position.array[0] = 10 * Math.random();
+        plane2.geometry.attributes.position.array[1] = 10 * Math.random();
+        plane2.geometry.attributes.position.array[2] = 10 * Math.random();
         
+        // const lastPointZ = plane2.geometry.attributes.position.array.length - 1;
+        plane2.geometry.attributes.position.array[lastPointZ] = 10 * Math.random(); 
+        plane2.geometry.attributes.position.needsUpdate = true;
+
         renderer.render(scene, camera)
     }
 
