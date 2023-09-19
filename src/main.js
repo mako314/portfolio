@@ -9,6 +9,7 @@ import stars from './img/stars.jpg'
 
 if ( WebGL.isWebGLAvailable() ) {
 
+    //THIS SETS UP THE URL FOR THE 3D MODEL, GOD BLESS AMERICA I FINALLY GOT IT TO DISPLAY
     const boardURL = new URL('./assets/noticeBoard.glb', import.meta.url);
 
     const renderer = new THREE.WebGL1Renderer();
@@ -269,6 +270,23 @@ if ( WebGL.isWebGLAvailable() ) {
     sphere2.position.set(-5, 10, 10);
 
     //----------------------------------------------------------------------------------------------
+    
+    //-------------------------------------importing the 3d model--------------------------------------------
+
+    const assetLoader = new GLTFLoader();
+
+    assetLoader.load(boardURL.href, function(gltf) {
+        const model = gltf.scene;
+        scene.add(model);
+        model.position.set(0, 0, 10);
+        
+    }, undefined, function(error) {
+       console.error(error)
+    });
+    
+    
+    //----------------------------------------------------------------------------------------------
+
     //Animate boxrotation and other things with the spotLight
     function animate(){
         box.rotation.x += 0.01;
@@ -298,13 +316,13 @@ if ( WebGL.isWebGLAvailable() ) {
             }
         }
 
-        plane2.geometry.attributes.position.array[0] = 10 * Math.random();
-        plane2.geometry.attributes.position.array[1] = 10 * Math.random();
-        plane2.geometry.attributes.position.array[2] = 10 * Math.random();
+        // plane2.geometry.attributes.position.array[0] = 10 * Math.random();
+        // plane2.geometry.attributes.position.array[1] = 10 * Math.random();
+        // plane2.geometry.attributes.position.array[2] = 10 * Math.random();
         
-        // const lastPointZ = plane2.geometry.attributes.position.array.length - 1;
-        plane2.geometry.attributes.position.array[lastPointZ] = 10 * Math.random(); 
-        plane2.geometry.attributes.position.needsUpdate = true;
+        // // const lastPointZ = plane2.geometry.attributes.position.array.length - 1;
+        // plane2.geometry.attributes.position.array[lastPointZ] = 10 * Math.random(); 
+        // plane2.geometry.attributes.position.needsUpdate = true;
 
         renderer.render(scene, camera)
     }
