@@ -35,14 +35,11 @@ if ( WebGL.isWebGLAvailable() ) {
     const axesHelper = new THREE.AxesHelper(5)
     scene.add(axesHelper)
     
-    // camera.position.z = 5;
-    // camera.position.y = 2;
-
     //                 //x y z
-    camera.position.set(-10, 30 ,30 );
+    // camera.position.set(15, 15 ,30 );
 
     //Changes position of camera. must come after camera.position.set
-    orbit.update
+    // orbit.update
 
     //Plane Instance
     const planeGeometry = new THREE.PlaneGeometry(60, 60);
@@ -51,7 +48,10 @@ if ( WebGL.isWebGLAvailable() ) {
         side: THREE.DoubleSide
     });
     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+    
     scene.add(plane);
+    plane.position.set(0, 0 , 0)
+
     plane.rotation.x = -0.5 * Math.PI;
     plane.receiveShadow = true;
 
@@ -68,7 +68,7 @@ if ( WebGL.isWebGLAvailable() ) {
     //LIGHTING - DIRECTIONAL THIS TIME
     const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 0.8);
     scene.add(directionalLight);
-    directionalLight.position.set(30, -50 ,0);
+    directionalLight.position.set(30, 50 ,0);
     //Have the directional list cast a shadow
     directionalLight.castShadow = true;
     //Position the bottom portion lower to properly capture balls shadow
@@ -85,27 +85,8 @@ if ( WebGL.isWebGLAvailable() ) {
     scene.add(dLightShadowHelper)
 
     //-----------------------------------------Directional light ABOVE----------------------------------
-
-    //----------------------Spotlight Lighting, be cautious to the double commented (actual comments throughout the code, moving onto spotlight)------------
-    //Adding spotlight 
-    // const spotLight = new THREE.SpotLight(0xFFFFFF);
-    // scene.add(spotLight)
-    // //The case seems to be you typically add it to the scene before doing any rotating / positioning
-    // spotLight.position.set(50, 50, 0);
-    // //Cast shadow for spotlight
-    // spotLight.castShadow = true;
-
-    
-
-    // //if the four segments that define the spots created by the light, if the angle is too wide, the shadows will get pixelated, hence we narrow the angle
-    // spotLight.angle = 0.2;
-
-    // const sLightHelper = new THREE.SpotLightHelper(spotLight);
-    // scene.add(sLightHelper);
-
-    //------------------------------------------Spotlight ABOVE-------------
     //START GUI, allows for changing the color in a controller based system in top right corner
-    const gui = new dat.GUI();
+    // const gui = new dat.GUI();
 
     //Background coloring,
     renderer.setClearColor(0xFFFFFF)
@@ -132,10 +113,29 @@ if ( WebGL.isWebGLAvailable() ) {
     const assetLoader = new GLTFLoader();
 
     assetLoader.load(boardURL.href, function(gltf) {
-        const model = gltf.scene;
-        scene.add(model);
-        model.position.set(0, 0, 10);
-        spotLight.target.model
+        const noticeBoard = gltf.scene;
+        scene.add(noticeBoard);
+        noticeBoard.position.set(0, 0, 10);
+        // spotLight.target.noticeBoard
+
+        // Set the camera to look at the noticeBoard
+        console.log('noticeBoard Position:', noticeBoard.position);
+
+
+        let noticeBoardCenter = new THREE.Box3().setFromObject( noticeBoard );
+        noticeBoardCenter.getCenter( noticeBoard.position ); // this re-sets the noticeBoard position
+        noticeBoard.position.multiplyScalar( - 1 );
+
+        let pivot = new THREE.Group();
+        scene.add( pivot );
+        pivot.add( noticeBoard );
+
+        // noticeBoard.center()
+        noticeBoard.position.set(0,0,0)
+        noticeBoard.rotation.y += 200
+
+        camera.position.set(15, 20 ,50 );
+        camera.lookAt(noticeBoard.position);
         
     }, undefined, function(error) {
        console.error(error)
@@ -148,23 +148,14 @@ if ( WebGL.isWebGLAvailable() ) {
     function animate(){
         rayCaster.setFromCamera(mousePosition, camera);
         const intersects = rayCaster.intersectObjects(scene.children)
-        console.log(intersects)
-
-        // for(let i = 0; i < intersects.length; i++){
-        //     if(intersects[i].object.id === sphereId)
-        //         intersects[i].object.material.color.set(0xFF0000);
-                
-        //         //Give theBox named object a rotation
-        //     if(intersects[i].object.name === 'theBox'){
-        //         intersects[i].object.rotation.x += 0.01;
-        //         intersects[i].object.rotation.y += 0.01;
-        //     }
-        // }
+        // console.log(intersects)
 
         renderer.render(scene, camera)
     }
 
     renderer.setAnimationLoop(animate)
+    console.log('Camera Position:', camera.position);
+    
 
 
 
