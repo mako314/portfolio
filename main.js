@@ -214,6 +214,7 @@ if ( WebGL.isWebGLAvailable() ) {
     //Give box2 a name!
     box2.name = 'theBox';
 
+    //Adding a second plane for manipulation-----------------------------------------------
     const plane2Geometry = new THREE.PlaneGeometry(10, 10, 10, 10);
     const plane2Material = new THREE.MeshBasicMaterial({
         color: 0xFFFFFF,
@@ -223,7 +224,21 @@ if ( WebGL.isWebGLAvailable() ) {
     scene.add(plane2)
     plane2.position.set(10, 10, 15);
 
+    //All points that form the geometry of a mesh are located in an array in the geometry.attributes property. 
+    //Each set of 3 values starting from the first element of the array represents the xyz value of a vertex (point) 
+    //So you can have:
+    //xyz|xyz|...|xyz
+    //The first xyz is vertex 1, second vertex 2, and then the last one is whatever the last vertex is, depending on the model or geometry of your shape
+    // Going to move this content into animation
+    
+    // plane2.geometry.attributes.position.array[0] -= 10 * Math.random();
+    // plane2.geometry.attributes.position.array[1] -= 10 * Math.random();
+    // plane2.geometry.attributes.position.array[2] -= 10 * Math.random();
+    
+    const lastPointZ = plane2.geometry.attributes.position.array.length - 1;
+    // plane2.geometry.attributes.position.array[lastPointZ] -= 10 * Math.random();
 
+    //----------------------------------------------------------------------------------------------
     //Animate boxrotation and other things with the spotLight
     function animate(){
         box.rotation.x += 0.01;
@@ -252,7 +267,15 @@ if ( WebGL.isWebGLAvailable() ) {
                 intersects[i].object.rotation.y += 0.01;
             }
         }
+
+        plane2.geometry.attributes.position.array[0] = 10 * Math.random();
+        plane2.geometry.attributes.position.array[1] = 10 * Math.random();
+        plane2.geometry.attributes.position.array[2] = 10 * Math.random();
         
+        // const lastPointZ = plane2.geometry.attributes.position.array.length - 1;
+        plane2.geometry.attributes.position.array[lastPointZ] = 10 * Math.random(); 
+        plane2.geometry.attributes.position.needsUpdate = true;
+
         renderer.render(scene, camera)
     }
 
