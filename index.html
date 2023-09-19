@@ -8,6 +8,18 @@
 		</style>
 	</head>
 	<body>
+		<!-- You will typically see x-shader/x-vertex -->
+		<script id="vertexShader" type="vertex">
+			void main() {
+				gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+		}
+		</script>
+		<!-- You will typically see x-shader/x-fragment and such, not recognized in some languages, but is fine in what I'm doing now -->
+		<script id="fragmentShader" type="fragment">
+			void main() {
+				gl_FragColor = vec4(1.0, 0.1, 0.3, 1.0);
+			}
+		</script>
 		<script type="module" src="/main.js"></script>
 
         <div id="container"> </div>
