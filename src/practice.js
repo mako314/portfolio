@@ -9,6 +9,8 @@ import stars from './img/stars.jpg'
 
 if ( WebGL.isWebGLAvailable() ) {
 
+
+    //What an amazing tutorial that actually got my model to display
     //THIS SETS UP THE URL FOR THE 3D MODEL, GOD BLESS AMERICA I FINALLY GOT IT TO DISPLAY
     const boardURL = new URL('./assets/noticeBoard.glb', import.meta.url);
 
