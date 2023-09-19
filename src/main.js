@@ -4,10 +4,12 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as dat from 'dat.gui';
 
-import nebula from './src/nebula.jpg'
-import stars from './src/stars.jpg'
+import nebula from './img/nebula.jpg'
+import stars from './img/stars.jpg'
 
 if ( WebGL.isWebGLAvailable() ) {
+
+    const boardURL = new URL('./assets/noticeBoard.glb', import.meta.url);
 
     const renderer = new THREE.WebGL1Renderer();
     //Calls shadow, basically enabling shadows throughout the application
