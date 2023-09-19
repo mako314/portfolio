@@ -237,6 +237,19 @@ if ( WebGL.isWebGLAvailable() ) {
     
     const lastPointZ = plane2.geometry.attributes.position.array.length - 1;
     // plane2.geometry.attributes.position.array[lastPointZ] -= 10 * Math.random();
+    //----------------------------------------------------------------------------------------------
+    //-----------------Adding sphere with vertex shader and fragment shaders-----------------------------------------------------------------------
+
+    const sphere2Geometry = new THREE.SphereGeometry(4);
+
+    const sphere2Material = new THREE.ShaderMaterial({
+        vertexShader: vShader,
+        fragmentShader: fshader
+    });
+
+    const sphere2 = new THREE.Mesh(sphere2Geometry, sphere2Material);
+    scene.add(sphere2);
+    sphere2.position.set(-5, 10, 10);
 
     //----------------------------------------------------------------------------------------------
     //Animate boxrotation and other things with the spotLight
